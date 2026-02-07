@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Story</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            background: black;
+            color: white;
+            overflow: hidden;
+            font-family: 'Cinzel', serif;
+        }
+
+        /* netflix intro */
+        .netflix {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            color: red;
+            letter-spacing: 10px;
+        }
+
+        /* cinematic text */
+        .text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            opacity: 0;
+            transition: 2s;
+            width: 90%;
+        }
+
+        .big {
+            font-size: 60px;
+            color: #ffcc00;
+            text-shadow: 0 0 25px gold;
+        }
+
+        .normal {
+            font-size: 30px;
+        }
+
+        /* image scene */
+        .scene {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: 2s;
+        }
+
+        /* final */
+        .final {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            opacity: 0;
+            transition: 2s;
+        }
+
+        .final h1 {
+            font-size: 70px;
+            color: #ff4da6;
+            text-shadow: 0 0 25px #ff0080;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            font-size: 24px;
+            border: none;
+            border-radius: 40px;
+            background: #ff4da6;
+            color: white;
+            margin-top: 20px;
+        }
+
+        /* ring */
+        .ring {
+            position: fixed;
+            font-size: 80px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <audio id="music">
+        <source src="love.mp3">
+    </audio>
+
+    <div class="netflix" id="netflix">N</div>
+    <div class="scene" id="scene"></div>
+
+    <div class="text big" id="t1">A NETFLIX LOVE STORY</div>
+    <div class="text normal" id="t2">Starring</div>
+    <div class="text big" id="t3">Keshav ❤️ Trishna</div>
+    <div class="text normal" id="t4">In a world full of people...</div>
+    <div class="text normal" id="t5">Two souls met</div>
+    <div class="text normal" id="t6">And created magic</div>
+
+    <div class="final" id="final">
+        <h1>Will You Marry Me? 💍</h1>
+        <button class="btn" onclick="yes()">YES 💖</button>
+    </div>
+
+    <div class="ring" id="ring">💍</div>
+
+    <script>
+        const music = document.getElementById("music");
+
+        // start
+        document.body.addEventListener("click", () => {
+            music.play();
+            start();
+        }, { once: true });
+
+        function show(id, time) {
+            setTimeout(() => { document.getElementById(id).style.opacity = 1 }, time);
+        }
+
+        function hide(id, time) {
+            setTimeout(() => { document.getElementById(id).style.opacity = 0 }, time);
+        }
+
+        function start() {
+            hide("netflix", 1500);
+
+            show("t1", 2000);
+            hide("t1", 5000);
+
+            show("t2", 6000);
+            hide("t2", 8000);
+
+            show("t3", 8500);
+            hide("t3", 12000);
+
+            show("t4", 13000);
+            hide("t4", 16000);
+
+            show("t5", 17000);
+            hide("t5", 20000);
+
+            show("t6", 21000);
+            hide("t6", 24000);
+
+            // show photo
+            setTimeout(() => {
+                let s = document.getElementById("scene");
+                s.style.backgroundImage = "url('her.jpg')";
+                s.style.opacity = 1;
+            }, 25000);
+
+            setTimeout(() => {
+                document.getElementById("scene").style.opacity = 0;
+                document.getElementById("final").style.opacity = 1;
+            }, 31000);
+        }
+
+        function yes() {
+            document.getElementById("ring").style.display = "block";
+
+            // hearts
+            for (let i = 0; i < 80; i++) {
+                let h = document.createElement("div");
+                h.innerHTML = "💖";
+                h.style.position = "fixed";
+                h.style.left = Math.random() * 100 + "vw";
+                h.style.top = "100vh";
+                h.style.fontSize = (20 + Math.random() * 30) + "px";
+                h.style.transition = "3s";
+                document.body.appendChild(h);
+
+                setTimeout(() => {
+                    h.style.top = "-100px";
+                    h.style.opacity = "0";
+                }, 50);
+            }
+        }
+    </script>
+
+</body>
+
+</html>

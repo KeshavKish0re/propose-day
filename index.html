@@ -90,7 +90,7 @@
 
         #noBtn {
             background: gray;
-            position: absolute;
+            position: fixed;
         }
 
         .ring {
@@ -120,7 +120,6 @@
     <div class="text normal" id="t5">Two souls met</div>
     <div class="text normal" id="t6">And created magic</div>
 
-    <!-- FINAL PROPOSAL -->
     <div class="final" id="final">
         <h1>Will You Be My Forever? ❤️</h1>
         <div>
@@ -178,25 +177,42 @@
                 document.getElementById("scene").style.opacity = 0;
                 document.getElementById("final").style.opacity = 1;
             }, 31000);
+
+            // initial NO button position
+            setTimeout(() => {
+                let no = document.getElementById("noBtn");
+                no.style.left = "55%";
+                no.style.top = "65%";
+            }, 31500);
         }
 
-        // moving NO button
+        /* RUNNING NO BUTTON */
         const noBtn = document.getElementById("noBtn");
 
-        noBtn.addEventListener("mouseover", moveNo);
+        document.addEventListener("mousemove", (e) => {
+            const rect = noBtn.getBoundingClientRect();
+            let dx = Math.abs(e.clientX - (rect.left + rect.width / 2));
+            let dy = Math.abs(e.clientY - (rect.top + rect.height / 2));
+
+            if (dx < 120 && dy < 120) {
+                moveNo();
+            }
+        });
+
         noBtn.addEventListener("click", moveNo);
 
         function moveNo() {
-            let x = Math.random() * (window.innerWidth - 150);
+            let x = Math.random() * (window.innerWidth - 120);
             let y = Math.random() * (window.innerHeight - 80);
             noBtn.style.left = x + "px";
             noBtn.style.top = y + "px";
         }
 
+        /* YES CLICK */
         function yes() {
             document.getElementById("ring").style.display = "block";
 
-            for (let i = 0; i < 120; i++) {
+            for (let i = 0; i < 150; i++) {
                 let h = document.createElement("div");
                 h.innerHTML = "💖";
                 h.style.position = "fixed";

@@ -15,7 +15,6 @@
             color: white;
         }
 
-        /* bg */
         #bg {
             position: fixed;
             top: 0;
@@ -30,7 +29,6 @@
             z-index: -5;
         }
 
-        /* start */
         .startScreen {
             position: fixed;
             width: 100%;
@@ -51,7 +49,6 @@
             color: white;
         }
 
-        /* netflix */
         .netflix {
             position: absolute;
             width: 100%;
@@ -66,7 +63,6 @@
             transition: 1s;
         }
 
-        /* text */
         .text {
             position: absolute;
             top: 50%;
@@ -81,7 +77,6 @@
         .big {
             font-size: 60px;
             color: #ffcc00;
-            text-shadow: 0 0 25px gold;
             font-weight: bold;
         }
 
@@ -90,7 +85,6 @@
             font-weight: bold;
         }
 
-        /* final */
         .final {
             position: absolute;
             top: 50%;
@@ -109,7 +103,6 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* buttons */
         .btn {
             padding: 15px 40px;
             font-size: 24px;
@@ -175,7 +168,6 @@
         const bg = document.getElementById("bg");
         let accepted = false;
 
-        /* start */
         function begin() {
             document.getElementById("startScreen").style.display = "none";
             music.play();
@@ -212,7 +204,7 @@
             }, 32000);
         }
 
-        /* NO BUTTON FIX */
+        /* NO button */
         const noBtn = document.getElementById("noBtn");
 
         function placeNo() {
@@ -220,7 +212,6 @@
             noBtn.style.top = (window.innerHeight / 2 + 60) + "px";
         }
 
-        /* move only when near */
         document.addEventListener("mousemove", (e) => {
             if (accepted) return;
 
@@ -253,76 +244,11 @@
             startFireworks();
 
             document.querySelector(".final h1").innerHTML =
-                "She Said YES ❤️<br>Opening Memories...";
+                "She Said YES ❤️";
 
-            setTimeout(openHeartPage, 2500);
-        }
-
-        /* HEART PAGE */
-        function openHeartPage() {
-            let win = window.open("", "_self");
-
-            win.document.write(`
-<!DOCTYPE html>
-<html>
-<head>
-<title>Our Love</title>
-<style>
-body{
-margin:0;
-background:black;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
-}
-
-#heart{
-position:relative;
-width:520px;
-height:520px;
-}
-
-#heart img{
-position:absolute;
-width:120px;
-height:120px;
-object-fit:cover;
-border-radius:20px;
-box-shadow:0 0 25px #ff0080;
-}
-</style>
-</head>
-<body>
-
-<div id="heart"></div>
-
-<script>
-const imgs=["1.jpeg","2.jpeg","3.jpeg","4.jpeg","5.jpeg","6.jpeg","7.jpeg","8.jpeg"];
-const pos=[
-[200,40],
-[120,120],
-[280,120],
-[60,230],
-[340,230],
-[120,350],
-[280,350],
-[200,440]
-];
-
-const heart=document.getElementById("heart");
-imgs.forEach((src,i)=>{
-let im=document.createElement("img");
-im.src=src;
-im.style.left=pos[i][0]+"px";
-im.style.top=pos[i][1]+"px";
-heart.appendChild(im);
-});
-<\/script>
-
-</body>
-</html>
-`);
+            setTimeout(() => {
+                window.location.href = "heart.html";
+            }, 2500);
         }
 
         /* fireworks */
@@ -352,18 +278,18 @@ heart.appendChild(im);
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             particles.forEach((p, i) => {
-                ctx.fillStyle =\`hsl(\${Math.random()*360},100%,60%)\`;
-ctx.beginPath();
-ctx.arc(p.x,p.y,3,0,Math.PI*2);
-ctx.fill();
+                ctx.fillStyle = `hsl(${Math.random() * 360},100%,60%)`;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+                ctx.fill();
 
-p.x+=p.dx;
-p.y+=p.dy;
-p.life--;
-if(p.life<=0) particles.splice(i,1);
-});
-requestAnimationFrame(animate);
-}
+                p.x += p.dx;
+                p.y += p.dy;
+                p.life--;
+                if (p.life <= 0) particles.splice(i, 1);
+            });
+            requestAnimationFrame(animate);
+        }
     </script>
 </body>
 

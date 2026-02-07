@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Our Love</title>
+<style>
+body{
+margin:0;
+background:black;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+#heart{
+position:relative;
+width:520px;
+height:520px;
+}
+
+#heart img{
+position:absolute;
+width:130px;
+height:130px;
+object-fit:cover;
+border-radius:20px;
+box-shadow:0 0 25px #ff0080;
+}
+</style>
+</head>
+
+<body>
+
+<div id="heart"></div>
+
+<script>
+const imgs=["1.jpeg","2.jpeg","3.jpeg","4.jpeg","5.jpeg","6.jpeg","7.jpeg","8.jpeg"];
+
+const pos=[
+[200,40],
+[120,120],
+[280,120],
+[60,240],
+[340,240],
+[120,370],
+[280,370],
+[200,470]
+];
+
+const heart=document.getElementById("heart");
+
+imgs.forEach((src,i)=>{
+let im=document.createElement("img");
+im.src=src;
+im.style.left=pos[i][0]+"px";
+im.style.top=pos[i][1]+"px";
+heart.appendChild(im);
+});
+</script>
+
+</body>
+</html>

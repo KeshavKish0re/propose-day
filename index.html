@@ -14,8 +14,20 @@
             color: white;
             overflow: hidden;
             font-family: 'Cinzel', serif;
+        }
+
+        /* smooth background layer */
+        #bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
             background-size: cover;
             background-position: center;
+            transition: 1.2s ease;
+            z-index: -5;
         }
 
         /* start screen */
@@ -146,6 +158,8 @@
 
 <body>
 
+    <div id="bg"></div>
+
     <div class="startScreen" id="startScreen">
         <button class="startBtn" onclick="begin()">Tap to Start ❤️</button>
     </div>
@@ -165,7 +179,6 @@
     <div class="text normal" id="t5">Two souls met</div>
     <div class="text normal" id="t6">And created magic</div>
 
-    <!-- heart collage -->
     <div id="heartBox"></div>
 
     <div class="final" id="final">
@@ -178,7 +191,13 @@
 
     <script>
         const music = document.getElementById("music");
+        const bg = document.getElementById("bg");
         let accepted = false;
+
+        /* preload images (no white flash) */
+        ["22.jpg", "55.jpeg", "11.jpeg", "33.jpg", "44.jpeg", "77.jpeg",
+            "1.jpeg", "2.jpeg", "3.jpeg", "4.jpeg", "5.jpeg", "6.jpeg", "7.jpeg", "8.jpeg"]
+            .forEach(src => { let i = new Image(); i.src = src });
 
         /* start */
         function begin() {
@@ -187,38 +206,41 @@
             start();
         }
 
-        /* helpers */
         function show(id, t) { setTimeout(() => { document.getElementById(id).style.opacity = 1 }, t); }
         function hide(id, t) { setTimeout(() => { document.getElementById(id).style.opacity = 0 }, t); }
-        function bg(img, t) { setTimeout(() => { document.body.style.background = `url('${img}') center/cover no-repeat` }, t); }
+
+        /* smooth bg change */
+        function bgChange(img, t) {
+            setTimeout(() => {
+                bg.style.opacity = 0;
+                setTimeout(() => {
+                    bg.style.backgroundImage = `url('${img}')`;
+                    bg.style.opacity = 1;
+                }, 400);
+            }, t);
+        }
 
         function start() {
+            bg.style.background = "black";
 
-            document.body.style.background = "black";
             document.getElementById("netflix").style.opacity = 1;
             hide("netflix", 1500);
 
-            /* scenes */
-            bg("22.jpg", 2000); show("t1", 2000); hide("t1", 5000);
-            bg("55.jpeg", 6000); show("t2", 6000); hide("t2", 8000);
-            bg("11.jpeg", 8500); show("t3", 8500); hide("t3", 12000);
-            bg("33.jpg", 13000); show("t4", 13000); hide("t4", 16000);
-            bg("44.jpeg", 17000); show("t5", 17000); hide("t5", 20000);
-            bg("77.jpeg", 21000); show("t6", 21000); hide("t6", 24000);
+            bgChange("22.jpg", 2000); show("t1", 2000); hide("t1", 5000);
+            bgChange("55.jpeg", 6000); show("t2", 6000); hide("t2", 8000);
+            bgChange("11.jpeg", 8500); show("t3", 8500); hide("t3", 12000);
+            bgChange("33.jpg", 13000); show("t4", 13000); hide("t4", 16000);
+            bgChange("44.jpeg", 17000); show("t5", 17000); hide("t5", 20000);
+            bgChange("77.jpeg", 21000); show("t6", 21000); hide("t6", 24000);
 
-            /* heart collage */
             setTimeout(showHeart, 25000);
 
-            /* proposal */
             setTimeout(() => {
-                document.body.style.background = "black";
+                bg.style.background = "black";
                 document.getElementById("final").style.opacity = 1;
             }, 32000);
 
-            setTimeout(() => {
-                noBtn.style.left = "60%";
-                noBtn.style.top = "65%";
-            }, 33000);
+            setTimeout(() => safeNo(), 33000);
         }
 
         /* heart collage */
@@ -236,11 +258,8 @@
 
                 let angle = (i / 8) * 2 * Math.PI;
                 let r = 220;
-                let x = r * Math.cos(angle);
-                let y = r * Math.sin(angle);
-
-                im.style.left = x + "px";
-                im.style.top = y + "px";
+                im.style.left = r * Math.cos(angle) + "px";
+                im.style.top = r * Math.sin(angle) + "px";
             });
 
             setTimeout(() => {
@@ -248,15 +267,21 @@
             }, 6000);
         }
 
-        /* NO button */
+        /* NO button safe */
         const noBtn = document.getElementById("noBtn");
+
+        function safeNo() {
+            noBtn.style.left = (window.innerWidth * 0.6) + "px";
+            noBtn.style.top = (window.innerHeight * 0.7) + "px";
+        }
+
         noBtn.addEventListener("mouseenter", moveNo);
         noBtn.addEventListener("touchstart", moveNo);
 
         function moveNo() {
             if (accepted) return;
-            let x = Math.random() * (window.innerWidth - 120);
-            let y = Math.random() * (window.innerHeight - 80);
+            let x = Math.random() * (window.innerWidth - 150);
+            let y = Math.random() * (window.innerHeight - 150);
             noBtn.style.left = x + "px";
             noBtn.style.top = y + "px";
         }

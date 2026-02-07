@@ -132,16 +132,20 @@
 
     <script>
         const music = document.getElementById("music");
+        let started = false;     // story started?
+        let accepted = false;    // yes clicked?
 
+        // FIRST TAP ONLY
         document.body.addEventListener("click", () => {
+            if (started) return;
+            started = true;
             music.play();
             start();
-        }, { once: true });
+        });
 
         function show(id, time) {
             setTimeout(() => { document.getElementById(id).style.opacity = 1 }, time);
         }
-
         function hide(id, time) {
             setTimeout(() => { document.getElementById(id).style.opacity = 0 }, time);
         }
@@ -149,23 +153,12 @@
         function start() {
             hide("netflix", 1500);
 
-            show("t1", 2000);
-            hide("t1", 5000);
-
-            show("t2", 6000);
-            hide("t2", 8000);
-
-            show("t3", 8500);
-            hide("t3", 12000);
-
-            show("t4", 13000);
-            hide("t4", 16000);
-
-            show("t5", 17000);
-            hide("t5", 20000);
-
-            show("t6", 21000);
-            hide("t6", 24000);
+            show("t1", 2000); hide("t1", 5000);
+            show("t2", 6000); hide("t2", 8000);
+            show("t3", 8500); hide("t3", 12000);
+            show("t4", 13000); hide("t4", 16000);
+            show("t5", 17000); hide("t5", 20000);
+            show("t6", 21000); hide("t6", 24000);
 
             setTimeout(() => {
                 let s = document.getElementById("scene");
@@ -178,18 +171,18 @@
                 document.getElementById("final").style.opacity = 1;
             }, 31000);
 
-            // initial NO button position
             setTimeout(() => {
-                let no = document.getElementById("noBtn");
-                no.style.left = "55%";
-                no.style.top = "65%";
-            }, 31500);
+                noBtn.style.left = "55%";
+                noBtn.style.top = "65%";
+            }, 32000);
         }
 
         /* RUNNING NO BUTTON */
         const noBtn = document.getElementById("noBtn");
 
         document.addEventListener("mousemove", (e) => {
+            if (!started || accepted) return;
+
             const rect = noBtn.getBoundingClientRect();
             let dx = Math.abs(e.clientX - (rect.left + rect.width / 2));
             let dy = Math.abs(e.clientY - (rect.top + rect.height / 2));
@@ -202,6 +195,7 @@
         noBtn.addEventListener("click", moveNo);
 
         function moveNo() {
+            if (accepted) return;
             let x = Math.random() * (window.innerWidth - 120);
             let y = Math.random() * (window.innerHeight - 80);
             noBtn.style.left = x + "px";
@@ -210,6 +204,9 @@
 
         /* YES CLICK */
         function yes() {
+            if (accepted) return;
+            accepted = true;
+
             document.getElementById("ring").style.display = "block";
 
             for (let i = 0; i < 150; i++) {

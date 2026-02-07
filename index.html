@@ -16,6 +16,27 @@
             font-family: 'Cinzel', serif;
         }
 
+        /* start screen */
+        .startScreen {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .startBtn {
+            padding: 18px 40px;
+            font-size: 28px;
+            border: none;
+            border-radius: 40px;
+            background: red;
+            color: white;
+        }
+
         .netflix {
             position: absolute;
             width: 100%;
@@ -27,6 +48,8 @@
             font-size: 80px;
             color: red;
             letter-spacing: 10px;
+            opacity: 0;
+            transition: 1s;
         }
 
         .text {
@@ -106,6 +129,11 @@
 
 <body>
 
+    <!-- START SCREEN -->
+    <div class="startScreen" id="startScreen">
+        <button class="startBtn" onclick="begin(event)">Tap to Start ❤️</button>
+    </div>
+
     <audio id="music">
         <source src="love.mp3">
     </audio>
@@ -123,7 +151,7 @@
     <div class="final" id="final">
         <h1>Will You Be My Forever? ❤️</h1>
         <div>
-            <button class="btn" onclick="yes()">YES 😍</button>
+            <button class="btn" onclick="yes(event)">YES 😍</button>
             <button class="btn" id="noBtn">NO 😒</button>
         </div>
     </div>
@@ -132,25 +160,23 @@
 
     <script>
         const music = document.getElementById("music");
-        let started = false;     // story started?
-        let accepted = false;    // yes clicked?
+        let accepted = false;
 
-        // FIRST TAP ONLY
-        document.body.addEventListener("click", () => {
-            if (started) return;
-            started = true;
+        /* START BUTTON */
+        function begin(e) {
+            e.stopPropagation();
+            document.getElementById("startScreen").style.display = "none";
             music.play();
             start();
-        });
+        }
 
-        function show(id, time) {
-            setTimeout(() => { document.getElementById(id).style.opacity = 1 }, time);
-        }
-        function hide(id, time) {
-            setTimeout(() => { document.getElementById(id).style.opacity = 0 }, time);
-        }
+        /* scenes */
+        function show(id, time) { setTimeout(() => { document.getElementById(id).style.opacity = 1 }, time); }
+        function hide(id, time) { setTimeout(() => { document.getElementById(id).style.opacity = 0 }, time); }
 
         function start() {
+            document.getElementById("netflix").style.opacity = 1;
+
             hide("netflix", 1500);
 
             show("t1", 2000); hide("t1", 5000);
@@ -177,25 +203,22 @@
             }, 32000);
         }
 
-        /* RUNNING NO BUTTON */
+        /* NO BUTTON RUN */
         const noBtn = document.getElementById("noBtn");
 
         document.addEventListener("mousemove", (e) => {
-            if (!started || accepted) return;
+            if (accepted) return;
 
             const rect = noBtn.getBoundingClientRect();
             let dx = Math.abs(e.clientX - (rect.left + rect.width / 2));
             let dy = Math.abs(e.clientY - (rect.top + rect.height / 2));
 
-            if (dx < 120 && dy < 120) {
-                moveNo();
-            }
+            if (dx < 120 && dy < 120) { moveNo(); }
         });
 
         noBtn.addEventListener("click", moveNo);
 
         function moveNo() {
-            if (accepted) return;
             let x = Math.random() * (window.innerWidth - 120);
             let y = Math.random() * (window.innerHeight - 80);
             noBtn.style.left = x + "px";
@@ -203,7 +226,8 @@
         }
 
         /* YES CLICK */
-        function yes() {
+        function yes(e) {
+            e.stopPropagation();
             if (accepted) return;
             accepted = true;
 

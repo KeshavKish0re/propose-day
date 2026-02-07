@@ -4,7 +4,6 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Our Story</title>
-
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&display=swap" rel="stylesheet">
 
     <style>
@@ -41,7 +40,6 @@
             position: absolute;
             width: 100%;
             height: 100%;
-            background: black;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -95,9 +93,22 @@
         }
 
         .final h1 {
-            font-size: 60px;
-            color: #ff4da6;
-            text-shadow: 0 0 25px #ff0080;
+            font-size: 65px;
+            background: linear-gradient(90deg, #ff0080, #ffcc00, #00ffff, #ff0080);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 40px rgba(255, 255, 255, 0.4);
+            animation: glow 2s infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 20px #ff0080;
+            }
+
+            to {
+                text-shadow: 0 0 40px #00ffff;
+            }
         }
 
         .btn {
@@ -116,27 +127,30 @@
             position: fixed;
         }
 
-        .ring {
+        /* fireworks canvas */
+        #fireworks {
             position: fixed;
-            font-size: 90px;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            display: none;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
         }
     </style>
 </head>
 
 <body>
 
-    <!-- START SCREEN -->
     <div class="startScreen" id="startScreen">
-        <button class="startBtn" onclick="begin(event)">Tap to Start ❤️</button>
+        <button class="startBtn" onclick="begin()">Tap to Start ❤️</button>
     </div>
 
     <audio id="music">
         <source src="love.mp3">
     </audio>
+
+    <canvas id="fireworks"></canvas>
 
     <div class="netflix" id="netflix">N</div>
     <div class="scene" id="scene"></div>
@@ -151,32 +165,27 @@
     <div class="final" id="final">
         <h1>Will You Be My Forever? ❤️</h1>
         <div>
-            <button class="btn" onclick="yes(event)">YES 😍</button>
+            <button class="btn" onclick="yes()">YES 😍</button>
             <button class="btn" id="noBtn">NO 😒</button>
         </div>
     </div>
-
-    <div class="ring" id="ring">💖</div>
 
     <script>
         const music = document.getElementById("music");
         let accepted = false;
 
-        /* START BUTTON */
-        function begin(e) {
-            e.stopPropagation();
+        /* start */
+        function begin() {
             document.getElementById("startScreen").style.display = "none";
             music.play();
             start();
         }
 
-        /* scenes */
-        function show(id, time) { setTimeout(() => { document.getElementById(id).style.opacity = 1 }, time); }
-        function hide(id, time) { setTimeout(() => { document.getElementById(id).style.opacity = 0 }, time); }
+        function show(id, t) { setTimeout(() => { document.getElementById(id).style.opacity = 1 }, t); }
+        function hide(id, t) { setTimeout(() => { document.getElementById(id).style.opacity = 0 }, t); }
 
         function start() {
             document.getElementById("netflix").style.opacity = 1;
-
             hide("netflix", 1500);
 
             show("t1", 2000); hide("t1", 5000);
@@ -198,61 +207,78 @@
             }, 31000);
 
             setTimeout(() => {
-                noBtn.style.left = "55%";
+                noBtn.style.left = "60%";
                 noBtn.style.top = "65%";
             }, 32000);
         }
 
-        /* NO BUTTON RUN */
+        /* NO button move only when touched */
         const noBtn = document.getElementById("noBtn");
 
-        document.addEventListener("mousemove", (e) => {
-            if (accepted) return;
-
-            const rect = noBtn.getBoundingClientRect();
-            let dx = Math.abs(e.clientX - (rect.left + rect.width / 2));
-            let dy = Math.abs(e.clientY - (rect.top + rect.height / 2));
-
-            if (dx < 120 && dy < 120) { moveNo(); }
-        });
-
-        noBtn.addEventListener("click", moveNo);
+        noBtn.addEventListener("mouseenter", moveNo);
+        noBtn.addEventListener("touchstart", moveNo);
 
         function moveNo() {
+            if (accepted) return;
             let x = Math.random() * (window.innerWidth - 120);
             let y = Math.random() * (window.innerHeight - 80);
             noBtn.style.left = x + "px";
             noBtn.style.top = y + "px";
         }
 
-        /* YES CLICK */
-        function yes(e) {
-            e.stopPropagation();
+        /* YES */
+        function yes() {
             if (accepted) return;
             accepted = true;
 
-            document.getElementById("ring").style.display = "block";
+            startFireworks();
 
-            for (let i = 0; i < 150; i++) {
-                let h = document.createElement("div");
-                h.innerHTML = "💖";
-                h.style.position = "fixed";
-                h.style.left = Math.random() * 100 + "vw";
-                h.style.top = "100vh";
-                h.style.fontSize = (20 + Math.random() * 40) + "px";
-                h.style.transition = "3s";
-                document.body.appendChild(h);
+            document.querySelector(".final h1").innerHTML =
+                "She Said YES ❤️<br>My Happiest Moment Ever 💖";
+        }
 
-                setTimeout(() => {
-                    h.style.top = "-100px";
-                    h.style.opacity = "0";
-                }, 50);
-            }
+        /* REAL FIREWORKS */
+        const canvas = document.getElementById("fireworks");
+        const ctx = canvas.getContext("2d");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
 
-            setTimeout(() => {
-                document.querySelector(".final h1").innerHTML =
-                    "She said YES ❤️<br>Best day of my life 😍";
-            }, 1500);
+        let particles = [];
+
+        function startFireworks() {
+            setInterval(() => {
+                for (let i = 0; i < 80; i++) {
+                    particles.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height / 2,
+                        dx: (Math.random() - 0.5) * 5,
+                        dy: (Math.random() - 0.5) * 5,
+                        life: 100
+                    });
+                }
+            }, 600);
+
+            animate();
+        }
+
+        function animate() {
+            ctx.fillStyle = "rgba(0,0,0,0.2)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            particles.forEach((p, i) => {
+                ctx.fillStyle = `hsl(${Math.random() * 360},100%,60%)`;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+                ctx.fill();
+
+                p.x += p.dx;
+                p.y += p.dy;
+                p.life--;
+
+                if (p.life <= 0) particles.splice(i, 1);
+            });
+
+            requestAnimationFrame(animate);
         }
     </script>
 

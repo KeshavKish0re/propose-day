@@ -4,6 +4,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Our Story</title>
+
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&display=swap" rel="stylesheet">
 
     <style>
@@ -13,6 +14,8 @@
             color: white;
             overflow: hidden;
             font-family: 'Cinzel', serif;
+            background-size: cover;
+            background-position: center;
         }
 
         /* start screen */
@@ -36,29 +39,6 @@
             color: white;
         }
 
-        /* cinematic slideshow */
-        #slideshow {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            z-index: -2;
-            overflow: hidden;
-        }
-
-        .slide {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-size: cover;
-            background-position: center;
-            opacity: 0;
-            transform: scale(1.3);
-            transition: 3s;
-            filter: brightness(0.6);
-        }
-
         /* netflix */
         .netflix {
             position: absolute;
@@ -67,7 +47,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 80px;
+            font-size: 90px;
             color: red;
             letter-spacing: 10px;
             opacity: 0;
@@ -96,6 +76,25 @@
             font-size: 30px;
         }
 
+        /* heart collage */
+        #heartBox {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            transition: 1s;
+            z-index: 5;
+        }
+
+        #heartBox img {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 20px;
+            box-shadow: 0 0 20px #ff0080;
+        }
+
         /* final */
         .final {
             position: absolute;
@@ -114,17 +113,6 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             text-shadow: 0 0 40px rgba(255, 255, 255, 0.4);
-            animation: glow 2s infinite alternate;
-        }
-
-        @keyframes glow {
-            from {
-                text-shadow: 0 0 20px #ff0080;
-            }
-
-            to {
-                text-shadow: 0 0 40px #00ffff;
-            }
         }
 
         .btn {
@@ -168,9 +156,6 @@
 
     <canvas id="fireworks"></canvas>
 
-    <!-- slideshow -->
-    <div id="slideshow"></div>
-
     <div class="netflix" id="netflix">N</div>
 
     <div class="text big" id="t1">A NETFLIX LOVE STORY</div>
@@ -179,6 +164,9 @@
     <div class="text normal" id="t4">In a world full of people...</div>
     <div class="text normal" id="t5">Two souls met</div>
     <div class="text normal" id="t6">And created magic</div>
+
+    <!-- heart collage -->
+    <div id="heartBox"></div>
 
     <div class="final" id="final">
         <h1>Will You Be My Forever? ❤️</h1>
@@ -199,32 +187,68 @@
             start();
         }
 
-        /* text scenes */
+        /* helpers */
         function show(id, t) { setTimeout(() => { document.getElementById(id).style.opacity = 1 }, t); }
         function hide(id, t) { setTimeout(() => { document.getElementById(id).style.opacity = 0 }, t); }
+        function bg(img, t) { setTimeout(() => { document.body.style.background = `url('${img}') center/cover no-repeat` }, t); }
 
         function start() {
+
+            document.body.style.background = "black";
             document.getElementById("netflix").style.opacity = 1;
             hide("netflix", 1500);
 
-            show("t1", 2000); hide("t1", 5000);
-            show("t2", 6000); hide("t2", 8000);
-            show("t3", 8500); hide("t3", 12000);
-            show("t4", 13000); hide("t4", 16000);
-            show("t5", 17000); hide("t5", 20000);
-            show("t6", 21000); hide("t6", 24000);
+            /* scenes */
+            bg("22.jpg", 2000); show("t1", 2000); hide("t1", 5000);
+            bg("55.jpeg", 6000); show("t2", 6000); hide("t2", 8000);
+            bg("11.jpeg", 8500); show("t3", 8500); hide("t3", 12000);
+            bg("33.jpg", 13000); show("t4", 13000); hide("t4", 16000);
+            bg("44.jpeg", 17000); show("t5", 17000); hide("t5", 20000);
+            bg("77.jpeg", 21000); show("t6", 21000); hide("t6", 24000);
 
+            /* heart collage */
+            setTimeout(showHeart, 25000);
+
+            /* proposal */
             setTimeout(() => {
+                document.body.style.background = "black";
                 document.getElementById("final").style.opacity = 1;
-            }, 30000);
+            }, 32000);
 
             setTimeout(() => {
                 noBtn.style.left = "60%";
                 noBtn.style.top = "65%";
-            }, 31000);
+            }, 33000);
         }
 
-        /* NO button move only when touched */
+        /* heart collage */
+        function showHeart() {
+            let box = document.getElementById("heartBox");
+            box.innerHTML = "";
+            box.style.transform = "translate(-50%,-50%) scale(1)";
+
+            let imgs = ["1.jpeg", "2.jpeg", "3.jpeg", "4.jpeg", "5.jpeg", "6.jpeg", "7.jpeg", "8.jpeg"];
+
+            imgs.forEach((img, i) => {
+                let im = document.createElement("img");
+                im.src = img;
+                box.appendChild(im);
+
+                let angle = (i / 8) * 2 * Math.PI;
+                let r = 220;
+                let x = r * Math.cos(angle);
+                let y = r * Math.sin(angle);
+
+                im.style.left = x + "px";
+                im.style.top = y + "px";
+            });
+
+            setTimeout(() => {
+                box.style.transform = "translate(-50%,-50%) scale(0)";
+            }, 6000);
+        }
+
+        /* NO button */
         const noBtn = document.getElementById("noBtn");
         noBtn.addEventListener("mouseenter", moveNo);
         noBtn.addEventListener("touchstart", moveNo);
@@ -244,40 +268,15 @@
             startFireworks();
 
             document.querySelector(".final h1").innerHTML =
-                "She Said YES ❤️<br>My Happiest Moment Ever 💖";
+                "She Said YES ❤️<br>Best Moment Of My Life 💖";
         }
-
-        /* 🎬 CINEMATIC SLIDESHOW */
-        const photos = ["1.jpeg", "2.jpeg", "3.jpeg", "4.jpeg", "5.jpeg", "6.jpeg", "7.jpeg", "8.jpeg"];
-        const slideshow = document.getElementById("slideshow");
-
-        photos.forEach(p => {
-            let d = document.createElement("div");
-            d.className = "slide";
-            d.style.backgroundImage = `url(${p})`;
-            slideshow.appendChild(d);
-        });
-
-        let slides = document.querySelectorAll(".slide");
-        let current = 0;
-
-        function runSlides() {
-            slides.forEach(s => {
-                s.style.opacity = 0;
-                s.style.transform = "scale(1.3)";
-            });
-            slides[current].style.opacity = 1;
-            slides[current].style.transform = "scale(1)";
-            current++;
-            if (current >= slides.length) current = 0;
-        }
-        setInterval(runSlides, 3500);
 
         /* fireworks */
         const canvas = document.getElementById("fireworks");
         const ctx = canvas.getContext("2d");
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
+
         let particles = [];
 
         function startFireworks() {
@@ -286,12 +285,12 @@
                     particles.push({
                         x: Math.random() * canvas.width,
                         y: Math.random() * canvas.height / 2,
-                        dx: (Math.random() - 0.5) * 5,
-                        dy: (Math.random() - 0.5) * 5,
+                        dx: (Math.random() - 0.5) * 6,
+                        dy: (Math.random() - 0.5) * 6,
                         life: 100
                     });
                 }
-            }, 600);
+            }, 500);
             animate();
         }
 
@@ -313,6 +312,7 @@
             requestAnimationFrame(animate);
         }
     </script>
+
 </body>
 
 </html>

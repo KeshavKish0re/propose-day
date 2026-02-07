@@ -27,7 +27,6 @@
             background-repeat: no-repeat;
             background-position: center;
             background-size: contain;
-            /* image fit */
             transition: 1.2s ease;
             z-index: -5;
         }
@@ -128,7 +127,6 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* buttons */
         .btn {
             padding: 15px 40px;
             font-size: 24px;
@@ -143,9 +141,9 @@
         #noBtn {
             background: gray;
             position: fixed;
+            z-index: 10;
         }
 
-        /* fireworks */
         #fireworks {
             position: fixed;
             top: 0;
@@ -211,7 +209,7 @@
         function show(id, t) { setTimeout(() => { document.getElementById(id).style.opacity = 1 }, t); }
         function hide(id, t) { setTimeout(() => { document.getElementById(id).style.opacity = 0 }, t); }
 
-        /* smooth cinematic bg */
+        /* smooth bg */
         function bgChange(img, t) {
             setTimeout(() => {
                 bg.style.opacity = 0;
@@ -221,11 +219,8 @@
                     bg.style.backgroundSize = "contain";
                     bg.style.opacity = 1;
 
-                    /* cinematic zoom */
-                    bg.animate([
-                        { transform: "scale(1.08)" },
-                        { transform: "scale(1)" }
-                    ], { duration: 5000, fill: "forwards" });
+                    bg.animate([{ transform: "scale(1.06)" }, { transform: "scale(1)" }],
+                        { duration: 5000, fill: "forwards" });
 
                 }, 400);
 
@@ -254,7 +249,7 @@
             }, 32000);
         }
 
-        /* heart collage */
+        /* heart */
         function showHeart() {
             let box = document.getElementById("heartBox");
             box.innerHTML = "";
@@ -276,7 +271,7 @@
             setTimeout(() => { box.style.transform = "translate(-50%,-50%) scale(0)" }, 6000);
         }
 
-        /* NO GAME */
+        /* NO BUTTON GAME */
         const noBtn = document.getElementById("noBtn");
 
         function safeNo() {
@@ -284,6 +279,7 @@
             noBtn.style.top = (window.innerHeight * 0.7) + "px";
         }
 
+        /* move only when cursor near */
         document.addEventListener("mousemove", (e) => {
             if (accepted) return;
 
@@ -291,14 +287,18 @@
             let dx = Math.abs(e.clientX - (rect.left + rect.width / 2));
             let dy = Math.abs(e.clientY - (rect.top + rect.height / 2));
 
-            if (dx < 150 && dy < 150) {
+            if (dx < 120 && dy < 120) {
                 moveNo();
             }
         });
 
         function moveNo() {
-            let x = Math.random() * (window.innerWidth - 150);
-            let y = Math.random() * (window.innerHeight - 120);
+            let btnW = noBtn.offsetWidth;
+            let btnH = noBtn.offsetHeight;
+
+            /* SAFE AREA inside screen */
+            let x = Math.random() * (window.innerWidth - btnW - 20);
+            let y = Math.random() * (window.innerHeight - btnH - 20);
 
             if (x < 10) x = 10;
             if (y < 10) y = 10;

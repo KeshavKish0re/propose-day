@@ -16,7 +16,6 @@
             font-family: 'Cinzel', serif;
         }
 
-        /* netflix intro */
         .netflix {
             position: absolute;
             width: 100%;
@@ -30,7 +29,6 @@
             letter-spacing: 10px;
         }
 
-        /* cinematic text */
         .text {
             position: absolute;
             top: 50%;
@@ -52,7 +50,6 @@
             font-size: 30px;
         }
 
-        /* image scene */
         .scene {
             position: absolute;
             width: 100%;
@@ -63,7 +60,6 @@
             transition: 2s;
         }
 
-        /* final */
         .final {
             position: absolute;
             top: 50%;
@@ -72,10 +68,11 @@
             text-align: center;
             opacity: 0;
             transition: 2s;
+            width: 90%;
         }
 
         .final h1 {
-            font-size: 70px;
+            font-size: 60px;
             color: #ff4da6;
             text-shadow: 0 0 25px #ff0080;
         }
@@ -87,13 +84,18 @@
             border-radius: 40px;
             background: #ff4da6;
             color: white;
-            margin-top: 20px;
+            margin: 20px;
+            cursor: pointer;
         }
 
-        /* ring */
+        #noBtn {
+            background: gray;
+            position: absolute;
+        }
+
         .ring {
             position: fixed;
-            font-size: 80px;
+            font-size: 90px;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
@@ -118,17 +120,20 @@
     <div class="text normal" id="t5">Two souls met</div>
     <div class="text normal" id="t6">And created magic</div>
 
+    <!-- FINAL PROPOSAL -->
     <div class="final" id="final">
-        <h1>Will You Marry Me? 💍</h1>
-        <button class="btn" onclick="yes()">YES 💖</button>
+        <h1>Will You Be My Forever? ❤️</h1>
+        <div>
+            <button class="btn" onclick="yes()">YES 😍</button>
+            <button class="btn" id="noBtn">NO 😒</button>
+        </div>
     </div>
 
-    <div class="ring" id="ring">💍</div>
+    <div class="ring" id="ring">💖</div>
 
     <script>
         const music = document.getElementById("music");
 
-        // start
         document.body.addEventListener("click", () => {
             music.play();
             start();
@@ -163,7 +168,6 @@
             show("t6", 21000);
             hide("t6", 24000);
 
-            // show photo
             setTimeout(() => {
                 let s = document.getElementById("scene");
                 s.style.backgroundImage = "url('her.jpg')";
@@ -176,17 +180,29 @@
             }, 31000);
         }
 
+        // moving NO button
+        const noBtn = document.getElementById("noBtn");
+
+        noBtn.addEventListener("mouseover", moveNo);
+        noBtn.addEventListener("click", moveNo);
+
+        function moveNo() {
+            let x = Math.random() * (window.innerWidth - 150);
+            let y = Math.random() * (window.innerHeight - 80);
+            noBtn.style.left = x + "px";
+            noBtn.style.top = y + "px";
+        }
+
         function yes() {
             document.getElementById("ring").style.display = "block";
 
-            // hearts
-            for (let i = 0; i < 80; i++) {
+            for (let i = 0; i < 120; i++) {
                 let h = document.createElement("div");
                 h.innerHTML = "💖";
                 h.style.position = "fixed";
                 h.style.left = Math.random() * 100 + "vw";
                 h.style.top = "100vh";
-                h.style.fontSize = (20 + Math.random() * 30) + "px";
+                h.style.fontSize = (20 + Math.random() * 40) + "px";
                 h.style.transition = "3s";
                 document.body.appendChild(h);
 
@@ -195,6 +211,11 @@
                     h.style.opacity = "0";
                 }, 50);
             }
+
+            setTimeout(() => {
+                document.querySelector(".final h1").innerHTML =
+                    "She said YES ❤️<br>Best day of my life 😍";
+            }, 1500);
         }
     </script>
 

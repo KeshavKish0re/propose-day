@@ -11,12 +11,12 @@
         body {
             margin: 0;
             background: black;
-            color: white;
             overflow: hidden;
             font-family: 'Cinzel', serif;
+            color: white;
         }
 
-        /* smooth background layer */
+        /* smooth bg */
         #bg {
             position: fixed;
             top: 0;
@@ -24,13 +24,15 @@
             width: 100%;
             height: 100%;
             background: black;
-            background-size: cover;
+            background-repeat: no-repeat;
             background-position: center;
+            background-size: contain;
+            /* image fit */
             transition: 1.2s ease;
             z-index: -5;
         }
 
-        /* start screen */
+        /* start */
         .startScreen {
             position: fixed;
             width: 100%;
@@ -85,7 +87,7 @@
         }
 
         .normal {
-            font-size: 30px;
+            font-size: 30px
         }
 
         /* heart collage */
@@ -100,8 +102,8 @@
 
         #heartBox img {
             position: absolute;
-            width: 120px;
-            height: 120px;
+            width: 110px;
+            height: 110px;
             object-fit: cover;
             border-radius: 20px;
             box-shadow: 0 0 20px #ff0080;
@@ -124,9 +126,9 @@
             background: linear-gradient(90deg, #ff0080, #ffcc00, #00ffff, #ff0080);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 40px rgba(255, 255, 255, 0.4);
         }
 
+        /* buttons */
         .btn {
             padding: 15px 40px;
             font-size: 24px;
@@ -194,10 +196,10 @@
         const bg = document.getElementById("bg");
         let accepted = false;
 
-        /* preload images (no white flash) */
+        /* preload */
         ["22.jpg", "55.jpeg", "11.jpeg", "33.jpg", "44.jpeg", "77.jpeg",
             "1.jpeg", "2.jpeg", "3.jpeg", "4.jpeg", "5.jpeg", "6.jpeg", "7.jpeg", "8.jpeg"]
-            .forEach(src => { let i = new Image(); i.src = src });
+            .forEach(s => { let i = new Image(); i.src = s });
 
         /* start */
         function begin() {
@@ -209,14 +211,24 @@
         function show(id, t) { setTimeout(() => { document.getElementById(id).style.opacity = 1 }, t); }
         function hide(id, t) { setTimeout(() => { document.getElementById(id).style.opacity = 0 }, t); }
 
-        /* smooth bg change */
+        /* smooth cinematic bg */
         function bgChange(img, t) {
             setTimeout(() => {
                 bg.style.opacity = 0;
+
                 setTimeout(() => {
                     bg.style.backgroundImage = `url('${img}')`;
+                    bg.style.backgroundSize = "contain";
                     bg.style.opacity = 1;
+
+                    /* cinematic zoom */
+                    bg.animate([
+                        { transform: "scale(1.08)" },
+                        { transform: "scale(1)" }
+                    ], { duration: 5000, fill: "forwards" });
+
                 }, 400);
+
             }, t);
         }
 
@@ -238,9 +250,8 @@
             setTimeout(() => {
                 bg.style.background = "black";
                 document.getElementById("final").style.opacity = 1;
+                safeNo();
             }, 32000);
-
-            setTimeout(() => safeNo(), 33000);
         }
 
         /* heart collage */
@@ -262,12 +273,10 @@
                 im.style.top = r * Math.sin(angle) + "px";
             });
 
-            setTimeout(() => {
-                box.style.transform = "translate(-50%,-50%) scale(0)";
-            }, 6000);
+            setTimeout(() => { box.style.transform = "translate(-50%,-50%) scale(0)" }, 6000);
         }
 
-        /* NO button safe */
+        /* NO GAME */
         const noBtn = document.getElementById("noBtn");
 
         function safeNo() {
@@ -275,13 +284,25 @@
             noBtn.style.top = (window.innerHeight * 0.7) + "px";
         }
 
-        noBtn.addEventListener("mouseenter", moveNo);
-        noBtn.addEventListener("touchstart", moveNo);
+        document.addEventListener("mousemove", (e) => {
+            if (accepted) return;
+
+            const rect = noBtn.getBoundingClientRect();
+            let dx = Math.abs(e.clientX - (rect.left + rect.width / 2));
+            let dy = Math.abs(e.clientY - (rect.top + rect.height / 2));
+
+            if (dx < 150 && dy < 150) {
+                moveNo();
+            }
+        });
 
         function moveNo() {
-            if (accepted) return;
             let x = Math.random() * (window.innerWidth - 150);
-            let y = Math.random() * (window.innerHeight - 150);
+            let y = Math.random() * (window.innerHeight - 120);
+
+            if (x < 10) x = 10;
+            if (y < 10) y = 10;
+
             noBtn.style.left = x + "px";
             noBtn.style.top = y + "px";
         }
@@ -293,7 +314,7 @@
             startFireworks();
 
             document.querySelector(".final h1").innerHTML =
-                "She Said YES ❤️<br>Best Moment Of My Life 💖";
+                "She Said YES ❤️<br>My Happiest Moment Ever 💖";
         }
 
         /* fireworks */
@@ -301,7 +322,6 @@
         const ctx = canvas.getContext("2d");
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-
         let particles = [];
 
         function startFireworks() {
@@ -337,7 +357,6 @@
             requestAnimationFrame(animate);
         }
     </script>
-
 </body>
 
 </html>

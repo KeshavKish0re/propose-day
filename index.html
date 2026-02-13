@@ -85,24 +85,6 @@
             font-weight: bold;
         }
 
-        .final {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            opacity: 0;
-            transition: 2s;
-            width: 90%;
-        }
-
-        .final h1 {
-            font-size: 65px;
-            background: linear-gradient(90deg, #ff0080, #ffcc00, #00ffff, #ff0080);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
         .btn {
             padding: 15px 40px;
             font-size: 24px;
@@ -118,16 +100,6 @@
             background: gray;
             position: fixed;
             z-index: 10;
-        }
-
-        #fireworks {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
         }
 
         /* HEART PAGE */
@@ -159,6 +131,15 @@
             border-radius: 20px;
             box-shadow: 0 0 25px #ff0080;
         }
+
+        #proposalText {
+            margin-top: 30px;
+            font-size: 48px;
+            background: linear-gradient(90deg, #ff0080, #ffcc00, #00ffff, #ff0080);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+        }
     </style>
 </head>
 
@@ -174,8 +155,6 @@
         <source src="love.mp3">
     </audio>
 
-    <canvas id="fireworks"></canvas>
-
     <div class="netflix" id="netflix">N</div>
 
     <div class="text big" id="t1">A NETFLIX LOVE STORY</div>
@@ -185,18 +164,16 @@
     <div class="text normal" id="t5">Two souls met</div>
     <div class="text normal" id="t6">And created magic</div>
 
-    <div class="final" id="final">
-        <h1>Will You Be My Forever? ❤️</h1>
-        <div>
-            <button class="btn" onclick="yes()">YES 😍</button>
-            <button class="btn" id="noBtn">NO 😒</button>
-        </div>
-    </div>
-
-    <!-- HEART PAGE -->
+    <!-- HEART + FINAL PROPOSAL -->
     <div id="heartPage">
         <div id="heart"></div>
-        <button class="btn" onclick="finalProposal()">Next ❤️</button>
+
+        <div id="proposalText">Will You Be My Forever? ❤️</div>
+
+        <div>
+            <button class="btn">YES 😍</button>
+            <button class="btn" id="noBtn">NO 😒</button>
+        </div>
     </div>
 
     <script>
@@ -235,12 +212,30 @@
             bgChange("77.jpeg", 21000); show("t6", 21000); hide("t6", 24000);
 
             setTimeout(() => {
-                document.getElementById("final").style.opacity = 1;
-                placeNo();
-            }, 32000);
+                showHeart();
+            }, 26000);
         }
 
-        /* NO button */
+        /* HEART SHOW */
+        function showHeart() {
+            document.getElementById("heartPage").style.display = "flex";
+
+            const imgs = ["1.jpeg", "2.jpeg", "3.jpeg", "4.jpeg", "5.jpeg", "6.jpeg", "7.jpeg", "8.jpeg"];
+            const pos = [[200, 40], [120, 120], [280, 120], [60, 240], [340, 240], [120, 370], [280, 370], [200, 470]];
+            const heart = document.getElementById("heart");
+
+            imgs.forEach((src, i) => {
+                let im = document.createElement("img");
+                im.src = src;
+                im.style.left = pos[i][0] + "px";
+                im.style.top = pos[i][1] + "px";
+                heart.appendChild(im);
+            });
+
+            placeNo();
+        }
+
+        /* NO button run away */
         const noBtn = document.getElementById("noBtn");
 
         function placeNo() {
@@ -265,81 +260,6 @@
             if (y < 10) y = 10;
             noBtn.style.left = x + "px";
             noBtn.style.top = y + "px";
-        }
-
-        /* YES CLICK */
-        function yes() {
-            accepted = true;
-            startFireworks();
-            document.querySelector(".final h1").innerHTML = "Our Beautiful Memories ❤️";
-
-            setTimeout(() => {
-                showHeart();
-            }, 2000);
-        }
-
-        /* HEART SHOW */
-        function showHeart() {
-            document.getElementById("final").style.display = "none";
-            document.getElementById("heartPage").style.display = "flex";
-
-            const imgs = ["1.jpeg", "2.jpeg", "3.jpeg", "4.jpeg", "5.jpeg", "6.jpeg", "7.jpeg", "8.jpeg"];
-            const pos = [[200, 40], [120, 120], [280, 120], [60, 240], [340, 240], [120, 370], [280, 370], [200, 470]];
-            const heart = document.getElementById("heart");
-
-            imgs.forEach((src, i) => {
-                let im = document.createElement("img");
-                im.src = src;
-                im.style.left = pos[i][0] + "px";
-                im.style.top = pos[i][1] + "px";
-                heart.appendChild(im);
-            });
-        }
-
-        /* FINAL PROPOSAL AGAIN */
-        function finalProposal() {
-            document.getElementById("heartPage").style.display = "none";
-            document.getElementById("final").style.display = "block";
-            document.querySelector(".final h1").innerHTML = "Will You Be My Forever? ❤️";
-        }
-
-        /* FIREWORKS */
-        const canvas = document.getElementById("fireworks");
-        const ctx = canvas.getContext("2d");
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        let particles = [];
-
-        function startFireworks() {
-            setInterval(() => {
-                for (let i = 0; i < 80; i++) {
-                    particles.push({
-                        x: Math.random() * canvas.width,
-                        y: Math.random() * canvas.height / 2,
-                        dx: (Math.random() - .5) * 6,
-                        dy: (Math.random() - .5) * 6,
-                        life: 100
-                    });
-                }
-            }, 500);
-            animate();
-        }
-
-        function animate() {
-            ctx.fillStyle = "rgba(0,0,0,0.2)";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            particles.forEach((p, i) => {
-                ctx.fillStyle = `hsl(${Math.random() * 360},100%,60%)`;
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
-                ctx.fill();
-                p.x += p.dx;
-                p.y += p.dy;
-                p.life--;
-                if (p.life <= 0) particles.splice(i, 1);
-            });
-            requestAnimationFrame(animate);
         }
     </script>
 

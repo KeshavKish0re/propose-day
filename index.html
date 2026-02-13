@@ -85,6 +85,11 @@
             font-weight: bold;
         }
 
+        /* NAME PINK */
+        #t3 {
+            color: #ff4da6;
+        }
+
         .btn {
             padding: 15px 40px;
             font-size: 24px;
@@ -121,6 +126,7 @@
             position: relative;
             width: 520px;
             height: 520px;
+            margin-bottom: 40px;
         }
 
         #heart img {
@@ -132,13 +138,24 @@
             box-shadow: 0 0 25px #ff0080;
         }
 
+        /* proposal text below heart */
         #proposalText {
-            margin-top: 30px;
             font-size: 48px;
             background: linear-gradient(90deg, #ff0080, #ffcc00, #00ffff, #ff0080);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             text-align: center;
+            margin-top: 20px;
+        }
+
+        #fireworks {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 50;
         }
     </style>
 </head>
@@ -155,6 +172,8 @@
         <source src="love.mp3">
     </audio>
 
+    <canvas id="fireworks"></canvas>
+
     <div class="netflix" id="netflix">N</div>
 
     <div class="text big" id="t1">A NETFLIX LOVE STORY</div>
@@ -164,14 +183,14 @@
     <div class="text normal" id="t5">Two souls met</div>
     <div class="text normal" id="t6">And created magic</div>
 
-    <!-- HEART + FINAL PROPOSAL -->
+    <!-- HEART + PROPOSAL -->
     <div id="heartPage">
         <div id="heart"></div>
 
         <div id="proposalText">Will You Be My Forever? ❤️</div>
 
         <div>
-            <button class="btn">YES 😍</button>
+            <button class="btn" onclick="yes()">YES 😍</button>
             <button class="btn" id="noBtn">NO 😒</button>
         </div>
     </div>
@@ -235,7 +254,7 @@
             placeNo();
         }
 
-        /* NO button run away */
+        /* NO button run */
         const noBtn = document.getElementById("noBtn");
 
         function placeNo() {
@@ -260,6 +279,52 @@
             if (y < 10) y = 10;
             noBtn.style.left = x + "px";
             noBtn.style.top = y + "px";
+        }
+
+        /* YES CLICK FIREWORKS */
+        function yes() {
+            accepted = true;
+            startFireworks();
+            document.getElementById("proposalText").innerHTML = "She Said YES ❤️";
+        }
+
+        /* FIREWORKS */
+        const canvas = document.getElementById("fireworks");
+        const ctx = canvas.getContext("2d");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        let particles = [];
+
+        function startFireworks() {
+            setInterval(() => {
+                for (let i = 0; i < 80; i++) {
+                    particles.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height / 2,
+                        dx: (Math.random() - .5) * 6,
+                        dy: (Math.random() - .5) * 6,
+                        life: 100
+                    });
+                }
+            }, 500);
+            animate();
+        }
+
+        function animate() {
+            ctx.fillStyle = "rgba(0,0,0,0.2)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            particles.forEach((p, i) => {
+                ctx.fillStyle = `hsl(${Math.random() * 360},100%,60%)`;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+                ctx.fill();
+                p.x += p.dx;
+                p.y += p.dy;
+                p.life--;
+                if (p.life <= 0) particles.splice(i, 1);
+            });
+            requestAnimationFrame(animate);
         }
     </script>
 

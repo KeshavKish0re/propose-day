@@ -15,6 +15,7 @@
             color: white;
         }
 
+        /* background */
         #bg {
             position: fixed;
             top: 0;
@@ -25,7 +26,7 @@
             background-repeat: no-repeat;
             background-position: center;
             background-size: contain;
-            transition: 1.2s ease;
+            transition: 1.2s;
             z-index: -5;
         }
 
@@ -49,6 +50,7 @@
             color: white;
         }
 
+        /* netflix */
         .netflix {
             position: absolute;
             width: 100%;
@@ -85,10 +87,11 @@
             font-weight: bold;
         }
 
-        /* NAME PINK */
         #t3 {
             color: #ff4da6;
         }
+
+        /* pink name */
 
         .btn {
             padding: 15px 40px;
@@ -107,7 +110,7 @@
             z-index: 10;
         }
 
-        /* HEART PAGE */
+        /* heart page */
         #heartPage {
             display: none;
             position: fixed;
@@ -122,11 +125,12 @@
             z-index: 20;
         }
 
+        /* HEART position up */
         #heart {
             position: relative;
             width: 520px;
             height: 520px;
-            margin-bottom: 40px;
+            margin-top: -40px;
         }
 
         #heart img {
@@ -138,14 +142,14 @@
             box-shadow: 0 0 25px #ff0080;
         }
 
-        /* proposal text below heart */
+        /* proposal safe area */
         #proposalText {
             font-size: 48px;
+            margin-top: 40px;
             background: linear-gradient(90deg, #ff0080, #ffcc00, #00ffff, #ff0080);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             text-align: center;
-            margin-top: 20px;
         }
 
         #fireworks {
@@ -171,7 +175,6 @@
     <audio id="music">
         <source src="love.mp3">
     </audio>
-
     <canvas id="fireworks"></canvas>
 
     <div class="netflix" id="netflix">N</div>
@@ -230,17 +233,15 @@
             bgChange("44.jpeg", 17000); show("t5", 17000); hide("t5", 20000);
             bgChange("77.jpeg", 21000); show("t6", 21000); hide("t6", 24000);
 
-            setTimeout(() => {
-                showHeart();
-            }, 26000);
+            setTimeout(() => { showHeart(); }, 26000);
         }
 
-        /* HEART SHOW */
+        /* heart show */
         function showHeart() {
             document.getElementById("heartPage").style.display = "flex";
 
             const imgs = ["1.jpeg", "2.jpeg", "3.jpeg", "4.jpeg", "5.jpeg", "6.jpeg", "7.jpeg", "8.jpeg"];
-            const pos = [[200, 40], [120, 120], [280, 120], [60, 240], [340, 240], [120, 370], [280, 370], [200, 470]];
+            const pos = [[200, 20], [120, 100], [280, 100], [60, 220], [340, 220], [120, 340], [280, 340], [200, 450]];
             const heart = document.getElementById("heart");
 
             imgs.forEach((src, i) => {
@@ -254,12 +255,11 @@
             placeNo();
         }
 
-        /* NO button run */
+        /* NO run */
         const noBtn = document.getElementById("noBtn");
-
         function placeNo() {
             noBtn.style.left = (window.innerWidth / 2 + 120) + "px";
-            noBtn.style.top = (window.innerHeight / 2 + 60) + "px";
+            noBtn.style.top = (window.innerHeight / 2 + 120) + "px";
         }
 
         document.addEventListener("mousemove", (e) => {
@@ -275,20 +275,18 @@
             let h = noBtn.offsetHeight;
             let x = Math.random() * (window.innerWidth - w - 40);
             let y = Math.random() * (window.innerHeight - h - 40);
-            if (x < 10) x = 10;
-            if (y < 10) y = 10;
             noBtn.style.left = x + "px";
             noBtn.style.top = y + "px";
         }
 
-        /* YES CLICK FIREWORKS */
+        /* YES fireworks cinematic */
         function yes() {
             accepted = true;
-            startFireworks();
             document.getElementById("proposalText").innerHTML = "She Said YES ❤️";
+            startFireworks();
         }
 
-        /* FIREWORKS */
+        /* CINEMATIC FIREWORKS */
         const canvas = document.getElementById("fireworks");
         const ctx = canvas.getContext("2d");
         canvas.width = window.innerWidth;
@@ -297,16 +295,19 @@
 
         function startFireworks() {
             setInterval(() => {
-                for (let i = 0; i < 80; i++) {
+                let x = Math.random() * canvas.width;
+                let y = Math.random() * canvas.height / 2;
+                for (let i = 0; i < 120; i++) {
                     particles.push({
-                        x: Math.random() * canvas.width,
-                        y: Math.random() * canvas.height / 2,
-                        dx: (Math.random() - .5) * 6,
-                        dy: (Math.random() - .5) * 6,
-                        life: 100
+                        x: x,
+                        y: y,
+                        dx: (Math.random() - .5) * 8,
+                        dy: (Math.random() - .5) * 8,
+                        life: 120,
+                        color: `hsl(${Math.random() * 360},100%,60%)`
                     });
                 }
-            }, 500);
+            }, 600);
             animate();
         }
 
@@ -315,19 +316,20 @@
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             particles.forEach((p, i) => {
-                ctx.fillStyle = `hsl(${Math.random() * 360},100%,60%)`;
+                ctx.fillStyle = p.color;
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
                 ctx.fill();
+
                 p.x += p.dx;
                 p.y += p.dy;
                 p.life--;
                 if (p.life <= 0) particles.splice(i, 1);
             });
+
             requestAnimationFrame(animate);
         }
     </script>
-
 </body>
 
 </html>
